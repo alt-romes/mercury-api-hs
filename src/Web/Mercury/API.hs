@@ -138,7 +138,7 @@ data Recipients = Recipients
 data Recipient = Recipient
   { id :: Text
   , name :: Text
-  , nickname :: Text
+  , nickname :: Maybe Text
   , status :: Text
   , emails :: [Text]
   , dateLastPaid :: Maybe UTCTime
