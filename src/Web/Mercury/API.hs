@@ -12,9 +12,9 @@ import qualified Servant.Client as C
 type Mercury a = BasicAuth "Mercury API" () :> a
 
 type GetAccounts = "accounts" :> Get '[JSON] Accounts
-type GetAccount  = "accounts" :> Capture "id" Text :> Get '[JSON] Account
+type GetAccount  = "account" :> Capture "id" Text :> Get '[JSON] Account
 type GetAccountTransactions
-      = "accounts"
+      = "account"
       :> Capture "id" Text
       :> "transactions"
       :> QueryParam "limit" Int   -- Limit how many transactions you want to retrieve.
@@ -26,14 +26,14 @@ type GetAccountTransactions
       :> Get '[JSON] Transactions
       
 type GetAccountTransaction
-      = "accounts"
+      = "account"
       :> Capture "id" Text
       :> "transaction"
       :> Capture "transactionId" Text
       :> Get '[JSON] Transaction
 
 type PostRequestSendMoney
-      = "accounts"
+      = "account"
       :> Capture "id" Text
       :> "request-send-money"
       :> ReqBody '[JSON] RequestSendMoney
