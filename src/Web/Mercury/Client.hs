@@ -4,13 +4,15 @@ module Web.Mercury.Client
   , getTransactions
   , getTransaction
   , requestSendMoney
+  , getRecipients
+  , getRecipient
   , runMercuryClient
   , MercuryEnv(..)
   , MercuryClient
   , module Web.Mercury.API
   ) where
 
-import Web.Mercury.API hiding (getAccounts, getAccount, getTransaction, getTransactions, requestSendMoney)
+import Web.Mercury.API hiding (getAccounts, getAccount, getTransaction, getTransactions, requestSendMoney, getRecipients, getRecipient)
 import qualified Web.Mercury.API as API
 import Control.Monad.Reader
 import Servant.Client (ClientEnv, runClientM, ClientM, mkClientEnv, BaseUrl (BaseUrl), Scheme (Https))
@@ -31,12 +33,16 @@ getAccount       :: Text -> MercuryClient Account
 getTransactions  :: Text -> Maybe Int -> Maybe Int -> Maybe Text -> Maybe Text -> Maybe Text -> Maybe Text -> MercuryClient Transactions
 getTransaction   :: Text -> Text -> MercuryClient Transaction
 requestSendMoney :: Text -> RequestSendMoney -> MercuryClient RequestSendMoneyResponse
+getRecipients    :: MercuryClient Recipients
+getRecipient     :: Text -> MercuryClient Recipient
 
 getAccounts                   = performReq API.getAccounts
 getAccount b                  = performReq (\a -> API.getAccount a b)
 getTransactions b c d e f g h = performReq (\a -> API.getTransactions a b c d e f g h)
 getTransaction b c            = performReq (\a -> API.getTransaction a b c)
 requestSendMoney b c          = performReq (\a -> API.requestSendMoney a b c)
+getRecipients                 = performReq API.getRecipients
+getRecipient b                = performReq (\a -> API.getRecipient a b)
 
 performReq :: (BasicAuthData -> ClientM a) -> MercuryClient a
 performReq act = do

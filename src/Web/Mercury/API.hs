@@ -8,6 +8,7 @@ import Data.Text (Text)
 
 import Servant.API hiding (Delete)
 import qualified Servant.Client as C
+import Data.Time (UTCTime)
 
 type Mercury a = BasicAuth "Mercury API" () :> a
 
@@ -39,6 +40,9 @@ type PostRequestSendMoney
       :> ReqBody '[JSON] RequestSendMoney
       :> Post '[JSON] RequestSendMoneyResponse
 
+type GetRecipients = "recipients" :> Get '[JSON] Recipients
+type GetRecipient  = "recipient" :> Capture "id" Text :> Get '[JSON] Recipient
+
 --------------------------------------------------------------------------------
 
 getAccounts      :: BasicAuthData -> C.ClientM Accounts
@@ -46,12 +50,16 @@ getAccount       :: BasicAuthData -> Text -> C.ClientM Account
 getTransactions  :: BasicAuthData -> Text -> Maybe Int -> Maybe Int -> Maybe Text -> Maybe Text -> Maybe Text -> Maybe Text -> C.ClientM Transactions
 getTransaction   :: BasicAuthData -> Text -> Text -> C.ClientM Transaction
 requestSendMoney :: BasicAuthData -> Text -> RequestSendMoney -> C.ClientM RequestSendMoneyResponse
+getRecipients    :: BasicAuthData -> C.ClientM Recipients
+getRecipient     :: BasicAuthData -> Text -> C.ClientM Recipient
 
 getAccounts      = C.client (Proxy @(Mercury GetAccounts))
 getAccount       = C.client (Proxy @(Mercury GetAccount))
 getTransactions  = C.client (Proxy @(Mercury GetAccountTransactions))
 getTransaction   = C.client (Proxy @(Mercury GetAccountTransaction))
 requestSendMoney = C.client (Proxy @(Mercury PostRequestSendMoney))
+getRecipients    = C.client (Proxy @(Mercury GetRecipients))
+getRecipient     = C.client (Proxy @(Mercury GetRecipient))
 
 --------------------------------------------------------------------------------
 
@@ -64,6 +72,8 @@ data Accounts = Accounts
 data Account = Account
   { accountNumber :: Text
   , availableBalance :: Double
+  , createdAt :: UTCTime
+  , currentBalance :: Double
   , id :: Text
   , kind :: Text
   , routingNumber :: Text
@@ -83,10 +93,11 @@ data Transaction = Transaction
   , bankDescription :: Maybe Text
   , counterpartyId :: Text
   , counterpartyName :: Text
+  , createdAt :: UTCTime
   , id :: Text
   , note :: Maybe Text
   , externalMemo :: Maybe Text
-  , postedAt :: Maybe Text
+  , postedAt :: Maybe UTCTime
   , status :: Text
   , mercuryCategory :: Maybe Text
   , generalLedgerCodeName :: Maybe Text
@@ -117,3 +128,21 @@ data RequestSendMoneyResponse = RequestSendMoneyResponse
   deriving (Show, Generic)
   deriving anyclass (FromJSON)
 
+data Recipients = Recipients
+  { recipients :: [Recipient]
+  , total :: Int
+  }
+  deriving (Show, Generic)
+  deriving anyclass (FromJSON)
+
+data Recipient = Recipient
+  { id :: Text
+  , name :: Text
+  , nickname :: Text
+  , status :: Text
+  , emails :: [Text]
+  , dateLastPaid :: Maybe UTCTime
+  , defaultPaymentMethod :: Text
+  }
+  deriving (Show, Generic)
+  deriving anyclass (FromJSON)
