@@ -1,8 +1,8 @@
 module Web.Mercury.Client
   ( getAccounts
   , getAccount
-  , getTransaction
   , getTransactions
+  , getTransaction
   , requestSendMoney
   , runMercuryClient
   , MercuryEnv(..)
@@ -28,14 +28,14 @@ newtype MercuryClient a = MC (ReaderT (BasicAuthData, ClientEnv) IO a)
 
 getAccounts      :: MercuryClient Accounts
 getAccount       :: Text -> MercuryClient Account
-getTransaction   :: Text -> Text -> MercuryClient Transaction
 getTransactions  :: Text -> Maybe Int -> Maybe Int -> Maybe Text -> Maybe Text -> Maybe Text -> Maybe Text -> MercuryClient Transactions
+getTransaction   :: Text -> Text -> MercuryClient Transaction
 requestSendMoney :: Text -> RequestSendMoney -> MercuryClient RequestSendMoneyResponse
 
 getAccounts                   = performReq API.getAccounts
 getAccount b                  = performReq (\a -> API.getAccount a b)
-getTransaction b c            = performReq (\a -> API.getTransaction a b c)
 getTransactions b c d e f g h = performReq (\a -> API.getTransactions a b c d e f g h)
+getTransaction b c            = performReq (\a -> API.getTransaction a b c)
 requestSendMoney b c          = performReq (\a -> API.requestSendMoney a b c)
 
 performReq :: (BasicAuthData -> ClientM a) -> MercuryClient a

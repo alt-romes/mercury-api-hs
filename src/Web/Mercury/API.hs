@@ -43,14 +43,14 @@ type PostRequestSendMoney
 
 getAccounts      :: BasicAuthData -> C.ClientM Accounts
 getAccount       :: BasicAuthData -> Text -> C.ClientM Account
-getTransaction   :: BasicAuthData -> Text -> Text -> C.ClientM Transaction
 getTransactions  :: BasicAuthData -> Text -> Maybe Int -> Maybe Int -> Maybe Text -> Maybe Text -> Maybe Text -> Maybe Text -> C.ClientM Transactions
+getTransaction   :: BasicAuthData -> Text -> Text -> C.ClientM Transaction
 requestSendMoney :: BasicAuthData -> Text -> RequestSendMoney -> C.ClientM RequestSendMoneyResponse
 
 getAccounts      = C.client (Proxy @(Mercury GetAccounts))
 getAccount       = C.client (Proxy @(Mercury GetAccount))
-getTransaction   = C.client (Proxy @(Mercury GetAccountTransaction))
 getTransactions  = C.client (Proxy @(Mercury GetAccountTransactions))
+getTransaction   = C.client (Proxy @(Mercury GetAccountTransaction))
 requestSendMoney = C.client (Proxy @(Mercury PostRequestSendMoney))
 
 --------------------------------------------------------------------------------
