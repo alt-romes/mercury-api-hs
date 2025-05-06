@@ -19,6 +19,7 @@ common warnings
 library
     import:           warnings
     exposed-modules:  Web.Mercury.API
+                      Web.Mercury.Client
     -- other-modules:
     -- other-extensions:
 

@@ -11,7 +11,7 @@ import qualified Servant.Client as C
 
 type Mercury a = BasicAuth "Mercury API" () :> a
 
-type GetAccounts = "accounts" :> Get '[JSON] [Account]
+type GetAccounts = "accounts" :> Get '[JSON] Accounts
 type GetAccount  = "accounts" :> Capture "id" Text :> Get '[JSON] Account
 type GetAccountTransactions
       = "accounts"
@@ -41,7 +41,7 @@ type PostRequestSendMoney
 
 --------------------------------------------------------------------------------
 
-getAccounts      :: BasicAuthData -> C.ClientM [Account]
+getAccounts      :: BasicAuthData -> C.ClientM Accounts
 getAccount       :: BasicAuthData -> Text -> C.ClientM Account
 getTransaction   :: BasicAuthData -> Text -> Text -> C.ClientM Transaction
 getTransactions  :: BasicAuthData -> Text -> Maybe Int -> Maybe Int -> Maybe Text -> Maybe Text -> Maybe Text -> Maybe Text -> C.ClientM Transactions
@@ -49,11 +49,17 @@ requestSendMoney :: BasicAuthData -> Text -> RequestSendMoney -> C.ClientM Reque
 
 getAccounts      = C.client (Proxy @(Mercury GetAccounts))
 getAccount       = C.client (Proxy @(Mercury GetAccount))
-getTransactions  = C.client (Proxy @(Mercury GetAccountTransactions))
 getTransaction   = C.client (Proxy @(Mercury GetAccountTransaction))
+getTransactions  = C.client (Proxy @(Mercury GetAccountTransactions))
 requestSendMoney = C.client (Proxy @(Mercury PostRequestSendMoney))
 
 --------------------------------------------------------------------------------
+
+data Accounts = Accounts
+  { accounts :: [Account]
+  }
+  deriving (Show, Generic)
+  deriving anyclass (FromJSON)
 
 data Account = Account
   { accountNumber :: Text
@@ -62,14 +68,14 @@ data Account = Account
   , kind :: Text
   , routingNumber :: Text
   }
-  deriving Generic
+  deriving (Show, Generic)
   deriving anyclass (FromJSON)
 
 data Transactions = Transactions
   { total :: Int
   , transactions :: [Transaction]
   }
-  deriving Generic
+  deriving (Show, Generic)
   deriving anyclass (FromJSON)
 
 data Transaction = Transaction
@@ -83,7 +89,7 @@ data Transaction = Transaction
   , status :: Text
   , mercuryCategory :: Maybe Text
   }
-  deriving Generic
+  deriving (Show, Generic)
   deriving anyclass (FromJSON)
 
 data RequestSendMoney = RequestSendMoney
@@ -94,7 +100,7 @@ data RequestSendMoney = RequestSendMoney
       , externalMemo :: Maybe Text
       , idempotencyKey :: Text -- ^ Unique string identifying the transaction (WARNING: READ EXPLANATION)
       }
-  deriving Generic
+  deriving (Show, Generic)
   deriving anyclass (ToJSON)
 
 data RequestSendMoneyResponse = RequestSendMoneyResponse
@@ -106,6 +112,6 @@ data RequestSendMoneyResponse = RequestSendMoneyResponse
   , amount :: Double
   , status :: Text
   }
-  deriving Generic
+  deriving (Show, Generic)
   deriving anyclass (FromJSON)
 
