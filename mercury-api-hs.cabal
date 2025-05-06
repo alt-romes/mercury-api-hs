@@ -1,7 +1,7 @@
 cabal-version:      3.4
 name:               mercury-api-hs
 version:            0.1.0.0
-synopsis:           A client library for the Mercury Bank API
+synopsis:           A simple client library for the Mercury Bank API
 -- description:
 license:            BSD-3-Clause
 license-file:       LICENSE
@@ -11,7 +11,16 @@ maintainer:         rodrigo.m.mesquita@gmail.com
 category:           Web
 build-type:         Simple
 extra-doc-files:    CHANGELOG.md
+                    README
 -- extra-source-files:
+tested-with:        GHC == 9.10
+
+homepage:           https://github.com/alt-romes/mercury-api-hs
+bug-reports:        https://github.com/alt-romes/mercury-api-hs/issues
+
+source-repository head
+    type: git
+    location: https://github.com/alt-romes/mercury-api-hs
 
 common warnings
     ghc-options: -Wall
@@ -23,19 +32,20 @@ library
     -- other-modules:
     -- other-extensions:
 
-    build-depends:    base ^>=4.20.0.0,
-                      containers,
-                      text,
-                      bytestring,
-                      mtl,
-                      aeson,
-                      time,
+    build-depends:    base >=4.20 && < 5,
+
+                      aeson >= 2.2.3 && < 2.3,
+                      containers >= 0.7 && < 0.8,
+                      bytestring >= 0.12.1 && < 0.13,
+                      mtl >= 2.3.1 && < 2.4,
+                      text >= 2.1.1 && < 2.2,
+                      time >= 1.12.2 && < 1.13,
 
                       -- Network
-                      servant,
-                      servant-client >= 0.20,
-                      http-client,
-                      http-client-tls,
+                      servant >= 0.20.2 && < 0.21,
+                      servant-client >= 0.20.2 && < 0.21,
+                      http-client >= 0.7.19 && < 0.8,
+                      http-client-tls >= 0.3.6 && < 0.4,
 
     hs-source-dirs:   src
     default-language: GHC2024
