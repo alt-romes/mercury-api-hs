@@ -1,0 +1,14 @@
+on: [push]
+name: Build
+jobs:
+  build:
+    name: Build the package
+    runs-on: ubuntu-latest # or macOS-latest, or windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: haskell-actions/setup@v2
+        with:
+          ghc-version: 9.10
+          cabal-version: latest
+      - run: cabal build all
+
