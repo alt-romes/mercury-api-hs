@@ -86,8 +86,10 @@ data Transaction = Transaction
   , id :: Text
   , note :: Maybe Text
   , externalMemo :: Maybe Text
+  , postedAt :: Maybe Text
   , status :: Text
   , mercuryCategory :: Maybe Text
+  , generalLedgerCodeName :: Maybe Text
   }
   deriving (Show, Generic)
   deriving anyclass (FromJSON)
